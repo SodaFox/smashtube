@@ -1,13 +1,113 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}SmashTube!{% endblock %}</title>
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <!-- jQuery -->
+    <script type="text/javascript" src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- jQuery UI -->
+    <script type="text/javascript" src="vendor/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="vendor/jquery-ui-1.12.1/jquery-ui.min.css">
+    <!-- font-awesome -->
+    <link type="text/css" rel="stylesheet" href="vendor/font-awesome-4.7.0/css/font-awesome.min.css">    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+    <link type="text/css" rel="stylesheet" href="styles/smashtube.css">
+    <script type="text/javascript" src="scripts/smashtube.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top top-most" id="smashtube-nav">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#smashtube-nav-main" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">
+                    <span class="fa-stack">
+                        <i class="fa fa-bomb fa-stack-2x"></i>
+                        <strong class="fa-stack-1x brand-initials-s">S</strong>
+                        <strong class="fa-stack-1x brand-initials-m" style="color: #ccc:">M</strong>
+                        <strong class="fa-stack-1x brand-initials-a">A</strong>
+                        <strong class="fa-stack-1x brand-initials-s2">S</strong>
+                        <strong class="fa-stack-1x brand-initials-h">H</strong>
+
+                    </span>
+                </a>
+                <!-- <span class="navbar-brand">
+                    <span class="fa fa-fw fa-bomb"></span>
+                </span> -->
+            </div>
+
+            <div class="collapse navbar-collapse" id="smashtube-nav-main">
+                <ul class="nav navbar-nav navbar-right">
+                    {% if app.user %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-fw fa-user"></span> {{ app.user.username }} <span class="fa fa-fw fa-caret-down"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="smashtube-nav-control" data-type="my-list">
+                                    <span class="fa fa-fw fa-list"></span> Meine Merkliste
+                                </a>
+                            </li>
+                            <li>
+                                <a class="smashtube-nav-control" data-type="my-history">
+                                    <span class="fa fa-fw fa-history"></span> Mein Verlauf
+                                </a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a class="smashtube-nav-control" data-type="user-settings">
+                                    <span class="fa fa-fw fa-cogs"></span> Einstellungen
+                                </a>
+                            </li>
+                            <li>
+                                <a id="smashtube-nav-sign-out">
+                                    <span class="fa fa-fw fa-sign-out"></span> Abmelden
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a id="smashtube-nav-sign-in">
+                            <span class="fa fa-fw fa-sign-in"></span> Anmelden
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" id="smashtube-nav-search" class="form-control" placeholder="Suchen...">
+                            <span class="input-group-addon smashtube-nav-control" data-type="search-section">
+                                <span class="fa fa-fw fa-search"></span>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="smashtube-nav-control" data-type="explore"><span class="fa fa-fw fa-globe"></span> Entdecken</a>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+    {% block body %}{% endblock %}
+
+    <div id="smashtube-loader" style="display: none;"><div id="smashtube-loader-content"><div id="smashtube-loader-text"><span class="fa fa-fw fa-circle-o-notch fa-spin"></span> Lade Daten...</div></div></div>
+</body>
 </html>
