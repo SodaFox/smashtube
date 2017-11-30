@@ -36,7 +36,6 @@ class WebserviceUserProvider implements UserProviderInterface
 
         $userData = $query->fetch();
 
-
         if ($userData)
         {
             $password = $userData["password"];
@@ -51,7 +50,6 @@ class WebserviceUserProvider implements UserProviderInterface
             return new WebserviceUser($username, $password, $salt, $roles);
         }
 
-//        return new WebserviceUser("maxi","$2a$12\$FLBDpKjch5NO9jkVr8.WGOBmjohx/AWAgMZEFiOl2mnfK3F5bCotW","",array("ROLE_USER","ROLE_ADMIN"));
         throw new UsernameNotFoundException
         (
             sprintf('Username "%s" does not exist.', $username)
