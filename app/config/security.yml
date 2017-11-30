@@ -17,8 +17,11 @@ security:
         main:
             anonymous: ~
             form_login:
-                login_path: login
-                check_path: login
+                login_path: /login
+                check_path: /login
                 provider: loginservice
+            logout:
+                 path:   /logout
+                 target: /
     access_control:
             - { path: /user, roles: ROLE_USER }

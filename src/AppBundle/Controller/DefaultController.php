@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Common\QueryBuilder;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\DriverManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,6 +21,7 @@ class DefaultController extends Controller
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
+
     }
 
     /**
