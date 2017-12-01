@@ -9,6 +9,8 @@
 namespace AppBundle\Security\User;
 
 use AppBundle\Security\User\WebserviceUser;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -26,15 +28,12 @@ class WebserviceUserProvider implements UserProviderInterface
             'user' => 'root',
             'password' => '',
             'host' => 'localhost',
-            'driver' => 'pdo_mysql',
+            'driver' => 'mysqli',
         );
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-        $sql = "SELECT * FROM user u where u.username = :name";
-        $query= $conn->prepare($sql);
-        $query->bindValue("name", $username);
-        $query->execute();
 
-        $userData = $query->fetch();
+
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        $userData = $conn->fetchAll("select * from user where username = ?", array($username));
 
         if ($userData)
         {
