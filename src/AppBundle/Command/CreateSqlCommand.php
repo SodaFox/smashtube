@@ -1,13 +1,15 @@
 <?php
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateSqlCommand extends Command
+class CreateSqlCommand extends ContainerAwareCommand
 {
-    private $pathToSql = "";
+    private $dbName = "smashtube";
+
     protected function configure()
     {
         $this
@@ -23,7 +25,11 @@ class CreateSqlCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        //TODO ADD QUERY BUILDER
+        $path = $this->getContainer()->get('kernel')->getRootDir();
+
+        $path = $path . "\Resources\sql\smashtube.sql";
+
+        $output->writeln("Getting Sql form: " . $path);
 
         $config = new \Doctrine\DBAL\Configuration();
         $connectionParams = array(
@@ -31,11 +37,18 @@ class CreateSqlCommand extends Command
               'user' => 'root',
             'password' => '',
             'host' => 'localhost',
-            'driver' => 'pdo_mysql',
+            'driver' => 'mysqli',
         );
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-        $sql = "";
+        $sql = file_get_contents($path);
 
-
+        try
+        {
+            mysqli_multi_query($sql);
+        }
+        catch(Exception $exception)
+        {
+            $output->writeln("Error occured");
+        }
     }
 }
