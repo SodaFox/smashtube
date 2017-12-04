@@ -25,3 +25,4 @@ security:
                  target: /
     access_control:
             - { path: /user, roles: ROLE_USER }
+            - { path: /user/admin, roles: ROLE_ADMIN }
