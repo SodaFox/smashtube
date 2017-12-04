@@ -28,23 +28,28 @@ class WebserviceUserProvider implements UserProviderInterface
             'user' => 'root',
             'password' => '',
             'host' => 'localhost',
-            'driver' => 'mysqli',
+            'driver' => 'mysqli'
         );
 
 
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-        $userData = $conn->fetchAll("select * from user where username = ?", array($username));
+        $userData = $conn->fetchArray("select password,salt,roles from user where username = ?", array($username));
 
         if ($userData)
         {
-            $password = $userData["password"];
-            $salt = $userData["salt"];
+            $password = $userData[0];
+            $salt = $userData[1];
+            $roles = $userData[2];
+
             if($salt === null)
             {
                 $salt = "";
             }
             //TODO ADD ROLES
-            $roles = array("ROLE_USER","ROLE_ADMIN");
+            if($roles === null)
+            {
+                $roles = array("ROLE_USER","ROLE_ADMIN");
+            }
 
             return new WebserviceUser($username, $password, $salt, $roles);
         }

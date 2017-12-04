@@ -19,7 +19,7 @@ class TestController extends Controller
     {
         echo "<h1>Queries</h1>";
         echo "<p>get on row</p>";
-        var_dump($connection->fetchArray("select * from user where username = ?", array("user")));
+        var_dump($connection->fetchArray("select password,salt,roles from user where username = ?", array("user")));
         echo "<br>";
         echo "<p>get onew valuew</p>";
         echo var_dump($connection->fetchColumn("select username from user where username = ?", array("maxi")));
