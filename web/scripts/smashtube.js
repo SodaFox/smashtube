@@ -66,7 +66,7 @@ SmashTube =
 			url: SmashTube.Url.createUrl("/login")
 		}).done(function (data, textStatus, jqXHR)
 		{
-			SmashTube.LOGIN_POPOVER_TEMPLATE = data;
+			SmashTube.LOGIN_POPOVER_TEMPLATE = $(data).find("#loginform");
 
 			$("#smashtube-nav-sign-in").popover(
 			{
@@ -79,35 +79,40 @@ SmashTube =
 
 			$("#smashtube-nav-sign-in").off("shown.bs.popover").on("shown.bs.popover", function()
 			{
-				$("#loginform-submit").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
-				{
-					var usernameFilledIn = true;
-					var passwordFilledIn = true;
-					var username = $("[name='username']").val();
-					var password = $("[name='password']").val();
-
-					if (username == "")
-					{
-						usernameFilledIn = false;
-						$("[name='username']").parent().effect("shake");
-					}
-
-					if (password == "")
-					{
-						passwordFilledIn = false;
-						$("[name='password']").parent().effect("shake");
-					}
-
-					if (usernameFilledIn && passwordFilledIn)
-					{
-						SmashTube.submitLoginForm();
-					}
-				});
+				SmashTube.bindCheckLoginFormEvent();
 			});
 		})
 		.fail(function( jqXHR, textStatus, errorThrown )
 		{
 			ce(errorThrown);
+		});
+	},
+
+	bindCheckLoginFormEvent: function()
+	{
+		$("#loginform-submit").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+		{
+			var usernameFilledIn = true;
+			var passwordFilledIn = true;
+			var username = $("[name='username']").val();
+			var password = $("[name='password']").val();
+
+			if (username == "")
+			{
+				usernameFilledIn = false;
+				$("[name='username']").parent().effect("shake");
+			}
+
+			if (password == "")
+			{
+				passwordFilledIn = false;
+				$("[name='password']").parent().effect("shake");
+			}
+
+			if (usernameFilledIn && passwordFilledIn)
+			{
+				SmashTube.submitLoginForm();
+			}
 		});
 	},
 
@@ -134,7 +139,15 @@ SmashTube =
 				SmashTube.Splash.hide();
 			}
 			else
-				window.location.reload(); //login worked, reload page with logged in user;
+			{
+				 //login worked, reload page with logged in user;
+				if ($(".smashtube-login-standalone-content").length > 0)
+				{
+					window.location = SmashTube.Url.createUrl("/");
+				}
+				else
+					window.location.reload();
+			}
 
 		})
 		.fail(function( jqXHR, textStatus, errorThrown )
