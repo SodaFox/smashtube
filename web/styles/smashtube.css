@@ -3,6 +3,8 @@ body
 	background-color: #eeeeee;
 
 	overflow-y: hidden;
+
+	overflow-x: hidden;
 }
 
 .brand-initials-s
@@ -115,6 +117,13 @@ body
 
 #loginform-register
 {
+
+}
+
+.smashtube-login-separator
+{
+	margin-top: 5px;
+	margin-bottom: 10px;
 }
 
 .navbar-brand
