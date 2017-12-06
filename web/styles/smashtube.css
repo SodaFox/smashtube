@@ -106,22 +106,15 @@ body
 #loginform .input-group
 {
 	margin-bottom: 5px;
-
-	font-size: 125% !important;
 }
 
 #loginform-submit
-{/*
-	margin-left: -10px;*/
-
-	font-size: 120%;
+{
+	margin-left: -10px;
 }
 
 #loginform-register
 {
-	margin-left: -10px;
-
-	font-size: 120%;
 }
 
 .navbar-brand
