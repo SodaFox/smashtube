@@ -94,19 +94,19 @@ SmashTube =
 		{
 			var usernameFilledIn = true;
 			var passwordFilledIn = true;
-			var username = $("[name='username']").val();
-			var password = $("[name='password']").val();
+			var username = $("[name='_username']").val();
+			var password = $("[name='_password']").val();
 
 			if (username == "")
 			{
 				usernameFilledIn = false;
-				$("[name='username']").parent().effect("shake");
+				$("[name='_username']").parent().effect("shake");
 			}
 
 			if (password == "")
 			{
 				passwordFilledIn = false;
-				$("[name='password']").parent().effect("shake");
+				$("[name='_password']").parent().effect("shake");
 			}
 
 			if (usernameFilledIn && passwordFilledIn)
@@ -130,17 +130,17 @@ SmashTube =
 			cw(data);
 			if ($(data).find("[data-has-error]").attr("data-has-error") == "1")
 			{
-				$("[name='username']").parent().effect("shake");
-				$("[name='password']").parent().effect("shake");
+				$("[name='_username']").parent().effect("shake");
+				$("[name='_password']").parent().effect("shake");
 
-				$("[name='username']").val("");
-				$("[name='password']").val("");
+				$("[name='_username']").val("");
+				$("[name='_password']").val("");
 
 				SmashTube.Splash.hide();
 			}
 			else
 			{
-				 //login worked, reload page with logged in user;
+				//login worked, reload page with logged in user;
 				if ($(".smashtube-login-standalone-content").length > 0)
 				{
 					window.location = SmashTube.Url.createUrl("/");

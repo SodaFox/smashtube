@@ -9,7 +9,7 @@ body
 {
 	color: white;
 	margin-left: -0.2em;
-    margin-top: 0.2em;
+	margin-top: 0.2em;
 }
 
 .brand-initials-m
@@ -92,6 +92,12 @@ body
 	position: relative;
 }
 
+/*FIXME: Use custom class/id for popover title*/;
+.popover-title
+{
+	font-size: 120%;
+}
+
 #loginform
 {
 	margin-bottom: 0px !important;
@@ -100,12 +106,22 @@ body
 #loginform .input-group
 {
 	margin-bottom: 5px;
+
+	font-size: 125% !important;
 }
 
 #loginform-submit
+{/*
+	margin-left: -10px;*/
+
+	font-size: 120%;
+}
+
+#loginform-register
 {
-	padding-left: 7.5px;
-	padding-right: 7.5px;
+	margin-left: -10px;
+
+	font-size: 120%;
 }
 
 .navbar-brand
@@ -122,6 +138,11 @@ body
 
 	-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
 	box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.smashtube-nav-control
+{
+	font-size: 125% !important;
 }
 
 .smashtube-nav-control, #smashtube-nav-sign-in, #smashtube-nav-sign-out
