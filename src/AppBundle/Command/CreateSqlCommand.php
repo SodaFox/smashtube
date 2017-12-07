@@ -27,7 +27,7 @@ class CreateSqlCommand extends ContainerAwareCommand
     {
         $path = $this->getContainer()->get('kernel')->getRootDir();
 
-        $path = $path . "\Resources\sql\smashtube.sql";
+        $path = $path . "\sql\smashtube.sql";
 
         $output->writeln("Getting Sql form: " . $path);
 
@@ -42,9 +42,14 @@ class CreateSqlCommand extends ContainerAwareCommand
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
         $sql = file_get_contents($path);
 
+        $mysqliCon = mysqli_connect(
+            $conn->getHost(),
+            $conn->getUsername(),
+            $conn->getPassword()
+        );
         try
         {
-            mysqli_multi_query($sql);
+            mysqli_multi_query($mysqliCon,$sql);
         }
         catch(Exception $exception)
         {

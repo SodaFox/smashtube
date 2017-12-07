@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
     <link type="text/css" rel="stylesheet" href="styles/smashtube.css">
     <script type="text/javascript" src="scripts/smashtube.js"></script>
@@ -50,7 +52,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if app.user %}
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a class="dropdown-toggle smashtube-nav-control" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <span class="fa fa-fw fa-user"></span> {{ app.user.username }} <span class="fa fa-fw fa-caret-down"></span>
                         </a>
                         <ul class="dropdown-menu">
@@ -71,7 +73,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a id="smashtube-nav-sign-out">
+                                <a id="smashtube-nav-sign-out" class="smashtube-nav-control">
                                     <span class="fa fa-fw fa-sign-out"></span> Abmelden
                                 </a>
                             </li>
@@ -79,7 +81,7 @@
                     </li>
                     {% else %}
                     <li>
-                        <a id="smashtube-nav-sign-in">
+                        <a id="smashtube-nav-sign-in" class="smashtube-nav-control">
                             <span class="fa fa-fw fa-sign-in"></span> Anmelden
                         </a>
                     </li>
