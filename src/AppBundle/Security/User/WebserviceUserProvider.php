@@ -33,13 +33,14 @@ class WebserviceUserProvider implements UserProviderInterface
 
 
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-        $userData = $conn->fetchArray("select password,salt,roles from user where username = ?", array($username));
+        $userData = $conn->fetchArray("select password,salt,roles,user_id from user where username = ?", array($username));
 
         if ($userData)
         {
             $password = $userData[0];
             $salt = $userData[1];
             $roles = $userData[2];
+            $id = $userData[3];
 
             if($salt === null)
             {
@@ -51,7 +52,7 @@ class WebserviceUserProvider implements UserProviderInterface
                 $roles = array("ROLE_USER","ROLE_ADMIN");
             }
 
-            return new WebserviceUser($username, $password, $salt, $roles);
+            return new WebserviceUser($id,$username, $password, $salt, $roles);
         }
 
         throw new UsernameNotFoundException
