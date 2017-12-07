@@ -58,9 +58,7 @@ class SecurityController extends Controller
     {
         $result = $connection->fetchALl("select * from security where 1");
 
-        echo "<br />";
-        echo "<br />";
-        echo "<br />";
+
         $questionids=array();
         $questions=array();
         $questionsTransformed = array();
