@@ -62,7 +62,7 @@ class EpisodeController extends Controller
             ->add('title', TextType::class)
             ->add('description', TextareaType::class)
             ->add('thumbnail', TextType::class)
-            ->add("path",TextType::class)
+            ->add("path",TextType::class,array('disabled' => true))
             ->add('duration', TimeType::class,array('input' => "string"))
             ->add('realtime', TimeType::class,array('input' => "string","disabled" => true))
             ->add('season', NumberType::class,array("disabled" => true))
@@ -76,13 +76,15 @@ class EpisodeController extends Controller
         {
             $data = $form->getData();
 
-            $connection->update("media_description",array(
+            $connection->update("media",array(
                 'title' => $data["title"],
-                "description" => $data["description"]
+                "description" => $data["description"],
+                "thumbnail" => $data["thumbnail"],
+                "path" => $data["path"],
+                "duration" => $data["duration"],
+                "episode_number" => $data["episode_number"]
             ),array("id" => $data["id"]));
 
-            //category here
-            $this->_updateCategories($connection,$mediaId,$data["genre"]);
         }
 
         return $this->render('media/detail/get.html.twig', array(

@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -91,6 +92,60 @@ class MediaController extends Controller
         ));
     }
 
+    /**
+     * @Route("/media/{mediaId}/add", requirements={"mediaId": "\d+"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function postEpisodeAction(Request $request,Connection $connection,$mediaId)
+    {
+        $data = array();
+        $form = $this->createFormBuilder($data)
+            ->add("episode_number", NumberType::class)
+            ->add("duration", TimeType::class,array('input' => "string"))
+            ->add("season", NumberType::class)
+            ->add("title", TextType::class)
+            ->add("description", TextareaType::class)
+            ->add("file", FileType::class)
+            ->add('save', SubmitType::class, array('label' => 'Speichern'))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $file = $data["file"];
+
+            if(in_array($file->guessExtension() ,$this->getParameter("media_types")) == false)
+            {
+                $form->addError(new FormError("Datentyp wird nicht unterstützt"));
+                return $this->render('media/detail/get.html.twig', array(
+                    'form' => $form->createView(),
+                ));
+            }
+
+            $baseDir = $this->getParameter("media_directory");
+            $filename = "episode_{$data["episode_number"]}." . $file->guessExtension();
+            $dir = $baseDir . "{$mediaId}\\". $data["season"] . "\\";
+
+            $file->move($dir,$filename);
+
+//            echo  $data["duration"];
+            $connection->insert("media",array(
+                "episode_number" => $data["episode_number"],
+                "duration" => $data["duration"],
+                "title" => $data["title"],
+                "path" => $data["file"],
+                "season" => $data["season"],
+                "description_id" => $mediaId,
+                "description" => $data["description"]
+            ));
+        }
+
+        return $this->render('media/detail/get.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
 
     private  function _updateCategories(Connection $connection,$mediaId, $newCategories)
     {
