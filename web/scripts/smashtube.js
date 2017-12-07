@@ -11,28 +11,20 @@
 //		- MOR: Added output helper functions
 //		- MOR: 
 //-------------------------------------------------
+
 SmashTube =
 {
 	/*GLOBALS:*/
 	CLICK: "click touchend",
 	MAIN_CONTAINER_SELECTOR: "#smashtube-content",
-	LOGIN_POPOVER_TEMPLATE: undefined, 
+	LOGIN_POPOVER_TEMPLATE: undefined,
+	FORGOT_PASSWORD_TEMPLATE: undefined,
 
 	init: function()
 	{
-		this.initEvents();
 		this.initLogin();
 		this.initLogout();
-	},
-
-	initEvents: function()
-	{
-		$(".smashtube-nav-control").off(this.CLICK).on(this.CLICK, function()
-		{
-			var type = $(this).attr("data-type");
-
-			SmashTube.toggleView(type);
-		});
+		this.initForgotPassword();
 	},
 
 	toggleView: function(type)
@@ -63,7 +55,7 @@ SmashTube =
 		$.ajax(
 		{
 			type: 'GET',
-			url: SmashTube.Url.createUrl("/login")
+			url: SmashTube.Url.createUrl("/user/security/login")
 		}).done(function (data, textStatus, jqXHR)
 		{
 			SmashTube.LOGIN_POPOVER_TEMPLATE = $(data).find("#loginform");
@@ -80,6 +72,7 @@ SmashTube =
 			$("#smashtube-nav-sign-in").off("shown.bs.popover").on("shown.bs.popover", function()
 			{
 				SmashTube.bindCheckLoginFormEvent();
+				SmashTube.initForgotPasswordEvent();
 			});
 		})
 		.fail(function( jqXHR, textStatus, errorThrown )
@@ -124,10 +117,9 @@ SmashTube =
 		{
 			type: "POST",
 			data: $("#loginform").serialize(),
-			url: SmashTube.Url.createUrl("/login")
+			url: SmashTube.Url.createUrl("/user/security/login")
 		}).done(function (data, textStatus, jqXHR)
 		{
-			cw(data);
 			if ($(data).find("[data-has-error]").attr("data-has-error") == "1")
 			{
 				$("[name='_username']").parent().effect("shake");
@@ -142,9 +134,7 @@ SmashTube =
 			{
 				//login worked, reload page with logged in user;
 				if ($(".smashtube-login-standalone-content").length > 0)
-				{
 					window.location = SmashTube.Url.createUrl("/");
-				}
 				else
 					window.location.reload();
 			}
@@ -165,9 +155,109 @@ SmashTube =
 		{
 			SmashTube.Splash.show();
 
-			window.location = SmashTube.Url.createUrl("/logout");
+			window.location = SmashTube.Url.createUrl("/user/security/logout");
 		});
 	},
+
+	initForgotPassword: function()
+	{
+		$.ajax({
+			type: 'GET',
+			url: SmashTube.Url.createUrl("/user/security/reset"),
+		}).done(function (data, textStatus, jqXHR)
+		{
+			SmashTube.FORGOT_PASSWORD_TEMPLATE = data;
+			
+		}).fail(function( jqXHR, textStatus, errorThrown )
+		{
+			//TODO: proper error handling
+		});
+
+		SmashTube.initForgotPasswordEvent();
+	},
+
+	initForgotPasswordEvent: function()
+	{
+		$("#loginform-forgot-password").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+		{
+			$("body").append(SmashTube.FORGOT_PASSWORD_TEMPLATE);
+
+			$("#smashtube-reset-securequestion-select").selectpicker();
+
+			$("#smashtube-reset").modal("show");
+
+
+			$("#smashtube-reset").off("shown.bs.modal").on("shown.bs.modal", function()
+			{
+				$("#smashtube-reset-submit").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+				{
+					var usernameFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-username");
+					var answerFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-securequestion-answer");
+					var newPasswordFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-new-password");
+					var newPasswordRepeatFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-new-password-repeat");
+
+					var questionPicked = $("#smashtube-reset-securequestion-select").val() != "" ? true : false;
+					
+					var newPasswordsMatch = true;
+
+					if (!questionPicked)
+						$("[data-id='smashtube-reset-securequestion-select']").effect("shake");
+
+					if ($('#smashtube-reset-new-password').val() != $('#smashtube-reset-new-password-repeat').val())
+					{
+						newPasswordsMatch = false;
+
+						$('#smashtube-reset-new-password').effect("shake");
+						$('#smashtube-reset-new-password-repeat').effect("shake");
+					}
+
+					if (usernameFilledIn && questionPicked && answerFilledIn && newPasswordFilledIn && newPasswordRepeatFilledIn && newPasswordsMatch)
+					{
+						var resetFormData = $("#smashtube-reset-password").serialize();
+
+						$.ajax({
+							type: 'POST',
+							data: resetFormData,
+							url: SmashTube.Url.createUrl("/user/security/reset"),
+						}).done(function (data, textStatus, jqXHR)
+						{
+							/*
+								I hob reagiert
+
+								Reset hot funktioniert
+							*/
+							$("#smashtube-reset").modal("hide");
+
+							alert("Ihr Passwort wurde erfolgreich zurückgesetzt.");
+
+
+						}).fail(function( jqXHR, textStatus, errorThrown )
+						{
+							//TODO: proper error handling
+						});
+					}
+				});
+			});
+
+			$("#smashtube-reset").off("hidden.bs.modal").on("hidden.bs.modal", function()
+			{
+				$("#smashtube-reset").remove();
+			});
+		});
+	},
+
+	checkResetFilledIn: function(selector)
+	{
+		var retVal = true;
+
+		if ($(selector).val() == "")
+		{
+			retVal = false;
+			$(selector).effect("shake");	
+		}
+
+		return retVal;
+	}
 }
 
 SmashTube.Url = 

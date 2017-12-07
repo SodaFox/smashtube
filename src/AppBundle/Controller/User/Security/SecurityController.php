@@ -44,7 +44,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/reset")
+     * @Route("/user/security/reset")
      */
     public function resetAction(Request $request,AuthenticationUtils $authUtils)
     {
