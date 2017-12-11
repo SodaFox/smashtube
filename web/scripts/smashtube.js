@@ -19,12 +19,14 @@ SmashTube =
 	MAIN_CONTAINER_SELECTOR: "#smashtube-content",
 	LOGIN_POPOVER_TEMPLATE: undefined,
 	FORGOT_PASSWORD_TEMPLATE: undefined,
+	SEARCH_XHR: undefined,
 
 	init: function()
 	{
 		this.initLogin();
 		this.initLogout();
 		this.initForgotPassword();
+		this.initSearchEvents();
 	},
 
 	toggleView: function(type)
@@ -225,24 +227,51 @@ SmashTube =
 								I hob reagiert
 
 								Reset hot funktioniert
-							*/
-							$("#smashtube-reset").modal("hide");
+								*/
+								$("#smashtube-reset").modal("hide");
 
-							alert("Ihr Passwort wurde erfolgreich zurückgesetzt.");
+								alert("Ihr Passwort wurde erfolgreich zurückgesetzt.");
 
-
-						}).fail(function( jqXHR, textStatus, errorThrown )
-						{
+							}).fail(function( jqXHR, textStatus, errorThrown )
+							{
 							//TODO: proper error handling
 						});
-					}
-				});
+						}
+					});
 			});
 
 			$("#smashtube-reset").off("hidden.bs.modal").on("hidden.bs.modal", function()
 			{
 				$("#smashtube-reset").remove();
 			});
+		});
+	},
+
+	initSearchEvents: function()
+	{
+		$("#smashtube-nav-search").off("keyup").on("keyup", function(event)
+		{
+			var key = String.fromCharCode(event.keyCode);
+
+			if (/[a-zA-Z0-9-_ ]/.test(key))
+			{
+				if (SmashTube.SEARCH_XHR)
+					SmashTube.SEARCH_XHR.abort();
+
+				var searchString = $("#smashtube-nav-search").val();
+				var searchUrl = SmashTube.Url.createUrl("/search") + "?SearchString=" + searchString;
+
+				SmashTube.SEARCH_XHR = $.ajax({
+					type: 'GET',
+					url: searchUrl,
+				}).done(function (data, textStatus, jqXHR)
+				{
+					cl(data);
+				}).fail(function( jqXHR, textStatus, errorThrown )
+				{
+					cw("ERROR! BETTER CHECK YOSELF!");
+				});	
+			}
 		});
 	},
 
