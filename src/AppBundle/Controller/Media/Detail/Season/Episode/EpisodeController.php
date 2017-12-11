@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Media\Detail\Season\Episode;
 
 use Doctrine\DBAL\Connection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,6 +23,7 @@ use Symfony\Component\Validator\Constraints\Time;
 class EpisodeController extends Controller
 {
     /**
+     * @Method({"GET"})
      * @Route("/media/{mediaId}/season/{seasonId}", requirements={"mediaId": "\d+","seasonId": "\d+"})
      */
     public function getEpisodesAction(Request $request,Connection $connection,$mediaId,$seasonId)
@@ -35,6 +37,7 @@ class EpisodeController extends Controller
     }
 
     /**
+     * @Method({"GET"})
      * @Route("/media/{mediaId}/season/{seasonId}/{episodeId}", requirements={"mediaId": "\d+", "seasonId" : "\d+","episodeId" : "\d+"})
      */
     public function getEpisodeAction(Request $request,Connection $connection,$mediaId,$seasonId,$episodeId)
@@ -48,7 +51,8 @@ class EpisodeController extends Controller
     }
 
     /**
-     * @Route("/media/{mediaId}/season/{seasonId}/{episodeId}/edit", requirements={"mediaId": "\d+", "seasonId" : "\d+","episodeId" : "\d+"})
+     * @Method({"PUT"})
+     * @Route("/media/{mediaId}/season/{seasonId}/{episodeId}", requirements={"mediaId": "\d+", "seasonId" : "\d+","episodeId" : "\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function putEpisodeAction(Request $request,Connection $connection,$mediaId,$seasonId,$episodeId)

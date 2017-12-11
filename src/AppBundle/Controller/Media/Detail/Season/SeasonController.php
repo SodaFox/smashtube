@@ -2,6 +2,7 @@
 namespace AppBundle\Controller\Media\Detail\Season;
 
 use Doctrine\DBAL\Connection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,6 +23,7 @@ use Symfony\Component\Validator\Constraints\Choice;
 class SeasonController extends Controller
 {
     /**
+     * @Method({"GET"})
      * @Route("/media/{mediaId}/season", requirements={"mediaId": "\d+"})
      */
     public function getSeasonAction(Request $request,Connection $connection,$mediaId)

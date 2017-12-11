@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormError;
@@ -24,6 +25,7 @@ use Symfony\Component\Validator\Constraints\Choice;
 class MediaController extends Controller
 {
     /**
+     * @Method({"GET"})
      * @Route("/media/{mediaId}", requirements={"mediaId": "\d+"})
      */
     public function getMediaAction(Request $request,Connection $connection,$mediaId)
@@ -43,7 +45,8 @@ class MediaController extends Controller
     }
 
     /**
-     * @Route("/media/{mediaId}/edit", requirements={"mediaId": "\d+"})
+     * @Method({"PUT"})
+     * @Route("/media/{mediaId}", requirements={"mediaId": "\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function putMediaAction(Request $request,Connection $connection,$mediaId)
@@ -93,7 +96,8 @@ class MediaController extends Controller
     }
 
     /**
-     * @Route("/media/{mediaId}/add", requirements={"mediaId": "\d+"})
+     * @Method({"POST"})
+     * @Route("/media/{mediaId}", requirements={"mediaId": "\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function postEpisodeAction(Request $request,Connection $connection,$mediaId)
@@ -130,7 +134,6 @@ class MediaController extends Controller
 
             $file->move($dir,$filename);
 
-//            echo  $data["duration"];
             $connection->insert("media",array(
                 "episode_number" => $data["episode_number"],
                 "duration" => $data["duration"],
