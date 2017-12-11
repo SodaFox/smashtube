@@ -40,6 +40,13 @@
                 <button type="button" id="loginform-submit" class="btn btn-xs btn-primary">Anmelden</button>
             </div>
         </div>
+        <script>
+        $("[name='_username'], [name='_password']").off("keyup").on("keyup", function(event)
+        {
+            if (event.keyCode == 13)
+                $("#loginform-submit").trigger("click");
+        })
+        </script>
     </form>
 
     <script>
