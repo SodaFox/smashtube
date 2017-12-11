@@ -1,12 +1,76 @@
-{% extends 'base.html.twig' %}
+  <div class="modal fade" id="smashtube-register" tabindex="-1" role="dialog">
+  	<div class="modal-dialog modal-md" role="document">
+  		<div class="modal-content">
+  			<div class="modal-header">
+  				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  				<h3 class="modal-title">Neues Benutzerkonto anlegen</h3>
+  			</div>
 
-{% block body %}
-    <div id="smashtube-content">
-        <h1></h1>
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
+  			<div class="modal-body">
 
-        {{  form_errors(form) }}
-    </div>
-{% endblock %}
+  				<form id="registerform" action="" method="POST">
+
+  					<div class="form-group">  
+  						<label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Benutzername:</label>
+
+  						<div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-users"></span></span>
+  							<input type="text" class="form-control" name="form[username]" placeholder="Benutername" id="smashtube-register-username"/>
+  						</div>
+
+  					</div>
+
+  					<div class="form-group">
+  						<label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Passwort:</label>
+  						<div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-lock"></span></span>
+  							<input type="password" class="form-control" name="form[password][first]" placeholder="Passwort" id="smashtube-register-password"/>
+  						</div>
+  					</div>
+
+  					<div class="form-group">
+  						<label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;"></label>
+  						<div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-lock"></span></span>
+  							<input type="password" class="form-control" name="form[password][second]" placeholder="Passwort wiederholen" id="smashtube-register-password-repeat"/>
+  						</div>
+  					</div>
+
+
+  					<hr/>
+  					<div class="form-group">                
+  						<label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Sicherheitsfrage:</label>
+  						<div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-book"></span></span>
+  							{{ form_widget(form.question, {
+  							'attr': {'class': 'selectpicker form-control', 'data-live-search' : 'true', 'title': 'Bitte wählen...'}
+  						}) }}
+  					</div>          
+  				</div>
+
+  				<div class="form-group">                
+  					<label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Antwort</label>
+  					<div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-font"></span></span>
+  						<input type="text" class="form-control" name="form[answer]" placeholder="Antwort" id="smashtube-register-securequestion-answer"/>
+  					</div>
+  				</div>
+
+  				<hr/>  
+  				<div class="form-group">                
+  					<label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Geburtsdatum</label>
+  					<div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-font"></span></span>
+  						<input type="date" class="form-control" name="form[birthday]" placeholder="dd/mm/yyyy" id="smashtube-register-birthdate"/>
+  					</div>
+  					<script>
+  						var today = new Date().toISOString().substring(0, 10);
+                  		$('#smashtube-register-birthdate').val(today);
+  					</script>
+
+  				</div>
+  			</form>  
+  		</div>  
+  		<div class="modal-footer">
+  			<button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+  			<button type="button" id="smashtube-register-submit" class="btn btn-primary">Registrieren</button>
+  		</div>
+
+  	</div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

@@ -18,6 +18,7 @@ SmashTube =
 	CLICK: "click touchend",
 	MAIN_CONTAINER_SELECTOR: "#smashtube-content",
 	LOGIN_POPOVER_TEMPLATE: undefined,
+	REGISTER_TEMPLATE: undefined,
 	FORGOT_PASSWORD_TEMPLATE: undefined,
 	SEARCH_XHR: undefined,
 
@@ -25,8 +26,10 @@ SmashTube =
 	{
 		this.initLogin();
 		this.initLogout();
+		this.initRegister();
 		this.initForgotPassword();
 		this.initSearchEvents();
+
 	},
 
 	toggleView: function(type)
@@ -75,6 +78,7 @@ SmashTube =
 			{
 				SmashTube.bindCheckLoginFormEvent();
 				SmashTube.initForgotPasswordEvent();
+				SmashTube.initRegisterEvent();
 			});
 		})
 		.fail(function( jqXHR, textStatus, errorThrown )
@@ -161,6 +165,91 @@ SmashTube =
 		});
 	},
 
+	initRegister: function()
+	{
+		$.ajax({
+			type: 'GET',
+			url: SmashTube.Url.createUrl("/user/security/register")
+		}).done(function (data, textStatus, jqXHR)
+		{
+			SmashTube.REGISTER_TEMPLATE = data;
+
+		}).fail(function( jqXHR, textStatus, errorThrown )
+		{
+			//TODO: proper error handling
+		}); 
+
+		SmashTube.initRegisterEvent();
+	},
+
+	initRegisterEvent: function()
+	{
+		$("#loginform-register").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+		{
+			$("body").append(SmashTube.REGISTER_TEMPLATE);
+
+			$("#form_question").selectpicker();
+
+			$("#smashtube-register").modal("show");
+
+			$("#smashtube-register").off("shown.bs.modal").on("shown.bs.modal", function()
+			{
+				$("#smashtube-register-submit").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+				{
+					var usernameFilledIn = SmashTube.checkInputFilledIn("#smashtube-register-username")
+					var passwordFilledIn = SmashTube.checkInputFilledIn("#smashtube-register-password")
+					var passwordRepeatFilledIn = SmashTube.checkInputFilledIn("#smashtube-register-password-repeat")
+					var answerFilledIn = SmashTube.checkInputFilledIn("#smashtube-register-securequestion-answer")
+
+					var questionPicked = $("#form_question").val() != "" ? true : false;
+
+					var newPasswordsMatch = true;
+
+					if ($("#smashtube-register-password").val() != $("#smashtube-register-password-repeat").val())
+					{
+						newPasswordsMatch = false;
+
+						$("#smashtube-register-password").parent().effect("shake")
+						$("#smashtube-register-password-repeat").parent().effect("shake")
+					}
+
+					if (!questionPicked) 
+						$("[data-id='form_question']").parent().parent().effect("shake");
+
+					if (usernameFilledIn && newPasswordsMatch && passwordFilledIn && passwordRepeatFilledIn && answerFilledIn && questionPicked)
+					{
+						var registerformData = $("#registerform").serialize();
+
+						SmashTube.Splash.show()
+
+						$.ajax({
+							type: 'POST',
+							url: SmashTube.Url.createUrl("/user/security/register"),
+							data: registerformData
+						}).done(function (data, textStatus, jqXHR)
+						{
+							SmashTube.Splash.hide()
+							alert("Server hat bekommen")
+
+							$("#smashtube-register").modal("hide");
+						}).fail(function( jqXHR, textStatus, errorThrown )
+						{
+							SmashTube.Splash.hide()
+							//TODO: proper error handling
+						});
+
+
+					}		
+				});	
+			});
+
+			$("#smashtube-register").off("hidden.bs.modal").on("hidden.bs.modal", function()
+			{
+				$("#smashtube-register").remove();
+			});
+		});
+	},
+
 	initForgotPassword: function()
 	{
 		$.ajax({
@@ -169,7 +258,7 @@ SmashTube =
 		}).done(function (data, textStatus, jqXHR)
 		{
 			SmashTube.FORGOT_PASSWORD_TEMPLATE = data;
-			
+
 		}).fail(function( jqXHR, textStatus, errorThrown )
 		{
 			//TODO: proper error handling
@@ -193,24 +282,24 @@ SmashTube =
 			{
 				$("#smashtube-reset-submit").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
 				{
-					var usernameFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-username");
-					var answerFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-securequestion-answer");
-					var newPasswordFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-new-password");
-					var newPasswordRepeatFilledIn = SmashTube.checkResetFilledIn("#smashtube-reset-new-password-repeat");
+					var usernameFilledIn = SmashTube.checkInputFilledIn("#smashtube-reset-username");
+					var answerFilledIn = SmashTube.checkInputFilledIn("#smashtube-reset-securequestion-answer");
+					var newPasswordFilledIn = SmashTube.checkInputFilledIn("#smashtube-reset-new-password");
+					var newPasswordRepeatFilledIn = SmashTube.checkInputFilledIn("#smashtube-reset-new-password-repeat");
 
 					var questionPicked = $("#smashtube-reset-securequestion-select").val() != "" ? true : false;
 					
 					var newPasswordsMatch = true;
 
 					if (!questionPicked)
-						$("[data-id='smashtube-reset-securequestion-select']").effect("shake");
+						$("[data-id='smashtube-reset-securequestion-select']").parent().parent().effect("shake");
 
 					if ($('#smashtube-reset-new-password').val() != $('#smashtube-reset-new-password-repeat').val())
 					{
 						newPasswordsMatch = false;
 
-						$('#smashtube-reset-new-password').effect("shake");
-						$('#smashtube-reset-new-password-repeat').effect("shake");
+						$('#smashtube-reset-new-password').parent().effect("shake");
+						$('#smashtube-reset-new-password-repeat').parent().effect("shake");
 					}
 
 					if (usernameFilledIn && questionPicked && answerFilledIn && newPasswordFilledIn && newPasswordRepeatFilledIn && newPasswordsMatch)
@@ -275,14 +364,14 @@ SmashTube =
 		});
 	},
 
-	checkResetFilledIn: function(selector)
+	checkInputFilledIn: function(selector)
 	{
 		var retVal = true;
 
 		if ($(selector).val() == "")
 		{
 			retVal = false;
-			$(selector).effect("shake");	
+			$(selector).parent().effect("shake");	
 		}
 
 		return retVal;
