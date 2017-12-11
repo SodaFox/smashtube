@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\User;
 
 use Doctrine\DBAL\Connection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -16,6 +17,7 @@ class UserController extends Controller
 {
     /**
      * @Route("/user")
+     * @Method({"GET"})
      */
     public function getUserAction(Request $request,Connection $con)
     {
@@ -24,8 +26,6 @@ class UserController extends Controller
         $userData = $con->fetchAssoc("Select * from user where user.user_id = ?",array(
             $user->getId()
         ));
-
-//        var_dump($admin["birthday"]);
 
         $form = $this->createFormBuilder($userData)
             ->add('user_id', NumberType::class)

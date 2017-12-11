@@ -18,7 +18,7 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $user_id;
+    private $id;
 
     private $email;
 
@@ -54,6 +54,11 @@ class User implements UserInterface
     public function getUsername()
     {
         return $this->username;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function setUsername($username)

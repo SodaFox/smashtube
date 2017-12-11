@@ -33,7 +33,7 @@ class WebserviceUserProvider implements UserProviderInterface
 
 
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-        $userData = $conn->fetchArray("select password,salt,roles,user_id from user where username = ?", array($username));
+        $userData = $conn->fetchArray("select password,salt,roles,id from user where username = ?", array($username));
 
         if ($userData)
         {

@@ -39,27 +39,20 @@ class MediaController extends Controller
      */
     public function postMediaAction(Request $request,Connection $connection)
     {
-        $result = null;
-        $formData = array();
+        $formData = $request->request->all();
 
-        $form = $this->createFormBuilder(null)
-            ->add("title", TextType::class)
-            ->add("description", TextType::class)
-            ->getForm();
+        $result = $connection->insert("media_description",array(
+            "title" => $formData["title"],
+            "description" => $formData["description"]
+        ));
 
-        $form->submit($request->request->all(),false);
-        $form->handleRequest($request);
-
-        if($form->isValid())
+        if($result > 0)
         {
-            $data = $form->getData();
-            return $data;
-//            $result = $connection->insert("media_description",array(
-//                "title" => $data["season"],
-//                "description" => $data["description"]
-//            ));
+            return new JsonResponse(true);
         }
-
-        return new JsonResponse($result);
+        else
+        {
+            return new JsonResponse(false);
+        }
     }
 }

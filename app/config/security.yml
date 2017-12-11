@@ -18,6 +18,7 @@ security:
 
         main:
             anonymous: ~
+            http_basic: ~
             form_login:
                 login_path: /user/security/login
                 check_path: /user/security/login
