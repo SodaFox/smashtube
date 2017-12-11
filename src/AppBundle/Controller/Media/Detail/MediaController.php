@@ -43,7 +43,6 @@ class MediaController extends Controller
 
         return new JsonResponse($result);
     }
-
     /**
      * @Method({"PUT"})
      * @Route("/media/{mediaId}", requirements={"mediaId": "\d+"})
@@ -94,7 +93,6 @@ class MediaController extends Controller
             'form' => $form->createView(),
         ));
     }
-
     /**
      * @Method({"POST"})
      * @Route("/media/{mediaId}", requirements={"mediaId": "\d+"})
