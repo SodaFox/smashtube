@@ -1,0 +1,78 @@
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+</head>
+<body>
+
+  <div class="modal fade" id="smashtube-contact" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Kontakt</h3>
+        </div>
+
+        <div class="modal-body">
+          <form id="registerform" action="" method="POST">
+
+            <div class="form-group">
+              <label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Vorname:</label>
+              <div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-user"></span></span>
+                <input type="text" class="form-control" name="_first_name" placeholder="Vorname" id="smashtube-contact-firstname"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Nachname:</label>
+              <div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-user"></span></span>
+                <input type="text" class="form-control" name="_last_name" placeholder="Nachname" id="smashtube-contact-lastname"/>
+              </div>
+            </div>
+
+            <div class="form-group">  
+              <label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">E-mail:</label>
+              <div class="input-group col-md-7 col-sm-11"><span class="input-group-addon"><span class="fa fa-fw fa-send"></span></span>
+                <input type="email" class="form-control" name="_email" placeholder="E-mail@mail.com" id="smashtube-contact-email"/>
+              </div>
+            </div>
+
+            <hr/>
+
+            <div class="form-group">                
+              <label class="col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1" style="text-align: right; line-height:34px;">Ihr Anliegen:</label>
+                <!--<input type="date" class="form-control" name="_input" id="smashtube-contact-input"/> -->
+                <div class="input-group col-md-7 col-sm-11">
+                  <textarea name="_smashtube-contact-input" class="form-control" rows="5" style="border-radius: 4px; resize: none;"></textarea>
+                </div>
+                
+            </div>
+
+         </form>  
+       </div>  
+
+       <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+        <button type="button" class="btn btn-primary">Abschicken</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+  setTimeout(function()
+  {
+    $("#smashtube-contact").modal();
+    $("#smashtube-contact").modal("show");
+  }, 250)
+</script>
+</body>
