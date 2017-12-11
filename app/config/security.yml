@@ -7,6 +7,8 @@ security:
     encoders:
         AppBundle\Security\User\WebserviceUser:
             algorithm: bcrypt
+        AppBundle\Entity\User:
+            algorithm: bcrypt
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -17,12 +19,15 @@ security:
         main:
             anonymous: ~
             form_login:
-                login_path: /login
-                check_path: /login
+                login_path: /user/security/login
+                check_path: /user/security/login
                 provider: loginservice
             logout:
-                 path:   /logout
+                 path:   /user/security/logout
                  target: /
+
     access_control:
-            - { path: /user, roles: ROLE_USER }
+            #- { path: ^/user, roles: ROLE_USER }
+            - { path: ^/user/security, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+            - { path: ^/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY}
             - { path: /user/admin, roles: ROLE_ADMIN }

@@ -7,6 +7,16 @@ body
 	overflow-x: hidden;
 }
 
+.modal.fade.in
+{
+	z-index: 9999;
+}
+
+.modal-backdrop
+{
+	z-index: 9998;
+}
+
 .brand-initials-s
 {
 	color: white;
@@ -40,12 +50,12 @@ body
 
 .top-most
 {
-	z-index: 9998;
+	z-index: 9990;
 }
 
 .popover.fade.in
 {
-	z-index:  9999;
+	z-index:  9995;
 }
 
 #smashtube-loader
