@@ -56,7 +56,7 @@ class SecurityController extends Controller
      */
     public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, Connection $connection)
     {
-        $result = $connection->fetchALl("select * from security where 1");
+        $result = $connection->fetchALl("select * from question");
 
 
         $questionids=array();
@@ -75,7 +75,7 @@ class SecurityController extends Controller
                 'second_options' => array('label' => 'Repeat Password'),
             ))
             ->add("birthday", DateType::class, array('input' => 'string'))
-            ->add("security", ChoiceType::class, array(
+            ->add("question", ChoiceType::class, array(
                 //Danke Maxi
                 'choices' => $questionsTransformed
             ))
@@ -100,7 +100,7 @@ class SecurityController extends Controller
                 "birthday" => $data['birthday'],
                 "password" => $password,
                 "answer" => $answer,
-                "question_id" => $data['security']
+                "question_id" => $data['question']
             ));
         }
 
