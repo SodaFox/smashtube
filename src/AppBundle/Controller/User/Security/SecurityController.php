@@ -56,8 +56,9 @@ class SecurityController extends Controller
      */
     public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, Connection $connection)
     {
-        $result = $connection->fetchall("select * from question");
+        $result = $connection->fetchAll("select * from question");
 
+        
         $questionids=array();
         $questions=array();
         $questionsTransformed = array();
