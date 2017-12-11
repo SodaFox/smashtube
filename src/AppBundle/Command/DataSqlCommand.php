@@ -6,7 +6,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateSqlCommand extends ContainerAwareCommand
+class DataSqlCommand extends ContainerAwareCommand
 {
     private $dbName = "smashtube";
 

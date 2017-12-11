@@ -16,61 +16,63 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class MediaController
+ * Class WatchTimeController
  * @package AppBundle\Controller\User\Media
  * @Security("has_role('ROLE_USER')")
  */
 class WatchTimeController extends Controller
 {
     /**
-     * @Route("/user/media/watchlist")
+     * @Route("/user/media/watchtime")
      * @Method({"GET"})
      */
     public function getWatchTimeAction(Request $request,Connection $con)
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();;
-        $result = $con->fetchAll("
-        select wl.media_id as episode_id,m.title as episode_title, m.description as episode_description, 
-        m.season, md.title as media_title, md.id as media_id from watch_list wl
-        join media m on m.id = wl.media_id
-        join media_description md on md.id = m.description_id
-        where user_id = ?",
-            array($user->getId()));
+        $episode = $request->query->get("episode_id");
+        $user = $this->getUser();
 
+        $result = $con->fetchAssoc("select t.id as watch_id,t.timestamp as time from timestamp t where t.user_id = ? and t.media_id = ?",
+            array($user->getId(),$episode));
+//        var_dump($result);
         return new JsonResponse($result);
     }
     /**
-     * @Route("/user/media/watchlist")
+     * @Route("/user/media/watchtime")
      * @Method({"POST"})
      */
-    public function postWatchlistAction(Request $request,Connection $connection)
+    public function postWatchTimeAction(Request $request,Connection $connection)
     {
-        $formData = $request->request->all();
+        $episode = $request->get("episode_id");
+        $time = $request->get("time");
+        $user = $this->getUser();
 
-        $result = $connection->insert("watch_list",array(
-            "media_id" => $formData["episode_id"],
-            "user_id" => $this->getUser()->getId()
-        ));
-
-        if($result > 0)
-        {
-            return new JsonResponse(true);
-        }
-        else
-        {
-            return new JsonResponse(false);
-        }
-    }
-    /**
-     * @Route("/user/media/watchlist")
-     * @Method({"DELETE"})
-     */
-    public function deleteWatchlistAction(Request $request,Connection $connection)
-    {
-        $episodeId = $request->query->get("episode_id");
-
-        $result = $connection->executeQuery("delete from watch_list where media_id = ? and user_id = ?",
-            array($episodeId,$this->getUser()->getId()));
+        $connection->insert("timestamp",
+            array(
+                "media_id" => $episode,
+                "timestamp" => $time,
+                "user_id" => $user->getId()
+            ));
+//        var_dump($result);
         return new JsonResponse();
     }
+    /**
+     * @Route("/user/media/watchtime")
+     * @Method({"PUT"})
+     */
+    public function putWatchTimeAction(Request $request,Connection $connection)
+    {
+        $episode = $request->get("episode_id");
+        $time = $request->get("time");
+        $user = $this->getUser();
+
+        $connection->update("timestamp",
+            array(
+                "timestamp" => $time
+            ),array(
+                "user_id" => $user->getId(),
+                "media_id" => $episode
+                ));
+        return new Response();
+    }
+
 }
