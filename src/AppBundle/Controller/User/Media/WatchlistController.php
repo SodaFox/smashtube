@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @package AppBundle\Controller\User\Media
  * @Security("has_role('ROLE_USER')")
  */
-class MediaController extends Controller
+class WatchlistController extends Controller
 {
     /**
      * @Route("/user/media/watchlist")
