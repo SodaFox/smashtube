@@ -5,6 +5,7 @@ namespace AppBundle\Controller\User;
 use Doctrine\DBAL\Connection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -13,6 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class UserController
+ * @package AppBundle\Controller\User
+ * @Security("has_role('ROLE_USER')")
+ */
 class UserController extends Controller
 {
     /**
@@ -21,9 +27,9 @@ class UserController extends Controller
      */
     public function getUserAction(Request $request,Connection $con)
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
-        $userData = $con->fetchAssoc("Select * from user where user.user_id = ?",array(
+        $userData = $con->fetchAssoc("Select * from user where id = ?",array(
             $user->getId()
         ));
 
