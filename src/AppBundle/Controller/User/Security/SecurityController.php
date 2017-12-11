@@ -74,7 +74,9 @@ class SecurityController extends Controller
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Repeat Password'),
             ))
-            ->add("birthday", DateType::class, array('input' => 'string'))
+            ->add("birthday", DateType::class, array('widget' => 'single_text',
+                'input' => 'string'
+                ))
             ->add("question", ChoiceType::class, array(
                 //Danke Maxi
                 'choices' => $questionsTransformed
