@@ -15,6 +15,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class SecurityController extends Controller
 {
@@ -56,9 +58,22 @@ class SecurityController extends Controller
      */
     public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, Connection $connection)
     {
-        $result = $connection->fetchAll("select * from question");
+        if(isset($_POST['form'])){
+            $user = new User();
+            $password = $passwordEncoder->encodePassword($user ,$_POST['form']['password']['first']);
+            $answer = $passwordEncoder->encodePassword($user ,$_POST['form']['answer']);
 
-        
+            $connection->insert("user",array(
+                "username" => $_POST['form']['username'],
+                "birthday" => $_POST['form']['birthday'],
+                "password" => $password,
+                "answer" => $answer,
+                "question_id" => $_POST['form']['question']
+            ));
+            return new JsonResponse();
+        }
+        $result = $connection->fetchALl("select * from question");
+
         $questionids=array();
         $questions=array();
         $questionsTransformed = array();
@@ -66,7 +81,7 @@ class SecurityController extends Controller
             $questionsTransformed[$results["text"]] = $results["id"];
         }
 
-        
+
         $form = $this->createFormBuilder($result)
             ->add("username", TextType::class)
             ->add('password', RepeatedType::class, array(
@@ -87,12 +102,13 @@ class SecurityController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
+        /*if ($form->isSubmitted() && $form->isValid())
         {
+
             $data = $form->getData();
 
             $user = new User();
-            
+
             $password = $passwordEncoder->encodePassword($user ,$data['password']);
 
             $answer = $passwordEncoder->encodePassword($user ,$data['answer']);
@@ -104,7 +120,9 @@ class SecurityController extends Controller
                 "answer" => $answer,
                 "question_id" => $data['question']
             ));
-        }
+
+        }*/
+
 
 
         return $this->render(
