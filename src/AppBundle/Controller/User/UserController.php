@@ -22,13 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends Controller
 {
     /**
-     * @Route("/user")
-     * @Method({"GET"})
-     */
+ * @Route("/user")
+ * @Method({"GET"})
+ */
     public function getUserAction(Request $request,Connection $con)
     {
         $user = $this->getUser();
-
         $userData = $con->fetchAssoc("Select * from user where id = ?",array(
             $user->getId()
         ));
@@ -44,7 +43,6 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid())
         {
             $data = $form->getData();
@@ -58,7 +56,7 @@ class UserController extends Controller
 //            var_dump($con->errorInfo());
         }
 
-        return $this->render('get.html.twig', array(
+        return $this->render('user/get.html.twig', array(
             'form' => $form->createView(),
         ));
     }
