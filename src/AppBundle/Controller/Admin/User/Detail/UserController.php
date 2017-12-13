@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\User\Detail;
+namespace AppBundle\Controller\Admin\User\Detail;
 
 use Doctrine\DBAL\Connection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -17,14 +17,14 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class UserController
  * @package AppBundle\Controller\User
- * @Security("has_role('ROLE_USER')")
+ * @Security("has_role('ROLE_ADMIN')")
  */
 class UserController extends Controller
 {
     /**
- * @Route("/user/{userId}", requirements={"mediaId": "\d+"})
- * @Method({"GET"})
- */
+     * @Route("/admin/user/{userId}", requirements={"mediaId": "\d+"})
+     * @Method({"GET"})
+     */
     public function getUserAction(Request $request,Connection $con,$userId)
     {
         $user = $this->getUser();
