@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   `season` int(11) DEFAULT NULL,
   `description_id` int(11) NOT NULL,
   `episode_number` int(11) DEFAULT NULL,
+  `type` char(2) GENERATED ALWAYS AS (if(isnull(`season`),'m','s')) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `FK_media_media_ov` (`description_id`),
   CONSTRAINT `media_media_description` FOREIGN KEY (`description_id`) REFERENCES `media_description` (`id`) ON UPDATE NO ACTION
@@ -75,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `timestamp` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `FK_timestamp_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`),
   CONSTRAINT `FK_timestamp_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -100,11 +101,12 @@ CREATE TABLE IF NOT EXISTS `watch_list` (
   `media_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `media_id_user_id` (`media_id`,`user_id`),
   KEY `user_id` (`user_id`),
   KEY `media_id` (`media_id`),
   CONSTRAINT `FK_Verlauf_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_watch_history_media_description` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
