@@ -81,7 +81,7 @@ SmashTube =
 			$("#smashtube-nav-sign-in").off("shown.bs.popover").on("shown.bs.popover", function()
 			{
 				$("[name='_username']").focus();
-				
+
 				SmashTube.bindCheckLoginFormEvent();
 				SmashTube.initForgotPasswordEvent();
 				SmashTube.initRegisterEvent();
@@ -280,7 +280,7 @@ SmashTube =
 		{
 			$("body").append(SmashTube.FORGOT_PASSWORD_TEMPLATE);
 
-			$("#smashtube-reset-securequestion-select").selectpicker();
+			$("#form_question").selectpicker();
 
 			$("#smashtube-reset").modal("show");
 
@@ -403,7 +403,14 @@ SmashTube =
 
 				$("#smashtube-webplayer").modal("show");
 
-				/*$('#mediaplayer').mediaelementplayer({*/
+				$('#smashtube-player-video').mediaelementplayer({
+
+				});
+
+				$("#smashtube-webplayer").off("hidden.bs.modal").on("hidden.bs.modal", function()
+				{
+					$(this).remove();	
+				});
 
 			}).fail(function( jqXHR, textStatus, errorThrown )
 			{
