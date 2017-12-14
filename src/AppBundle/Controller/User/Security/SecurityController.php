@@ -123,7 +123,7 @@ class SecurityController extends Controller
 
 
         $form = $this->createFormBuilder($result)
-            ->add("username", InputType::class)
+            ->add("username", TextType::class)
             ->add('password', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'first_options'  => array('label' => 'Password'),
