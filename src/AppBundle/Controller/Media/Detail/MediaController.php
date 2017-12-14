@@ -44,8 +44,7 @@ class MediaController extends Controller
         return new JsonResponse($result);
     }
     /**
-     * @Method({"PUT"})
-     * @Route("/media/{mediaId}", requirements={"mediaId": "\d+"})
+     * @Route("/media/{mediaId}/edit", requirements={"mediaId": "\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function putMediaAction(Request $request,Connection $connection,$mediaId)
@@ -94,8 +93,7 @@ class MediaController extends Controller
         ));
     }
     /**
-     * @Method({"POST"})
-     * @Route("/media/{mediaId}", requirements={"mediaId": "\d+"})
+     * @Route("/media/{mediaId}/add", requirements={"mediaId": "\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function postEpisodeAction(Request $request,Connection $connection,$mediaId)
