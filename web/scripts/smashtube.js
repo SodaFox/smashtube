@@ -21,42 +21,33 @@ SmashTube =
 	REGISTER_TEMPLATE: undefined,
 	FORGOT_PASSWORD_TEMPLATE: undefined,
 	SEARCH_XHR: undefined,
+	CONTACT_TEMPLATE: undefined,
+
+	CURRENT_MEDIAELEMENT: undefined,
 
 	__DEBUG_MODE__: true,
 
 	init: function()
 	{
+		this.initExplore();
 		this.initLogin();
 		this.initLogout();
 		this.initRegister();
 		this.initForgotPassword();
 		this.initSearchEvents();
+		this.initContact();
 
 		if (this.__DEBUG_MODE__)
 			this.__initDebugEvents__();
 	},
 
-	toggleView: function(type)
+	initExplore: function()
 	{
-		this.hideAllSections();
-
-		if (type == "search-section")
+		$(".smashtube-nav-control[data-type='explore']").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
 		{
-			var searchString = $("#smashtube-nav-search").val();
-			var appendString = " Keine Suchkriterien angegeben";
-
-			if (searchString != "")
-				appendString = " Suche nach <b>" + searchString + "</b>";
-
-			$("#smashtube-search-section").html("Hier sind die Suchergebnisse." + appendString);
-		}
-		
-		$("#smashtube-" + type).attr("data-shown", "1")
-	},
-
-	hideAllSections: function()
-	{
-		$(".smashtube-content-group").attr("data-shown", "0");
+			SmashTube.Splash.show();
+			window.location = SmashTube.Url.createUrl("/");	
+		})
 	},
 
 	initLogin: function()
@@ -118,6 +109,10 @@ SmashTube =
 			{
 				SmashTube.submitLoginForm();
 			}
+			else
+			{
+				SmashTube.Notify.warning("Anmeldung fehlgeschlagen!");
+			}
 		});
 	},
 
@@ -141,6 +136,8 @@ SmashTube =
 				$("[name='_password']").val("");
 
 				SmashTube.Splash.hide();
+
+				SmashTube.Notify.warning("Anmeldung fehlgeschlagen!");
 			}
 			else
 			{
@@ -241,12 +238,15 @@ SmashTube =
 
 						}).fail(function( jqXHR, textStatus, errorThrown )
 						{
+							SmashTube.Notify.warning("Das Anmeldeformular ist fehlerhaft ausgefüllt!");
 							SmashTube.Splash.hide()
 							//TODO: proper error handling
 						});
-
-
 					}		
+					else
+					{
+						SmashTube.Notify.warning("Das Anmeldeformular ist fehlerhaft ausgefüllt!");
+					}
 				});	
 			});
 
@@ -330,8 +330,8 @@ SmashTube =
 
 							}).fail(function( jqXHR, textStatus, errorThrown )
 							{
-							//TODO: proper error handling
-						});
+								//TODO: proper error handling
+							});
 						}
 					});
 			});
@@ -343,13 +343,72 @@ SmashTube =
 		});
 	},
 
+	initContact: function()
+	{
+		$.ajax({
+			type: 'GET',
+			url: SmashTube.Url.createUrl("/contact"),
+		}).done(function (data, textStatus, jqXHR)
+		{
+			SmashTube.CONTACT_TEMPLATE = data;
+
+		}).fail(function( jqXHR, textStatus, errorThrown )
+		{
+			//TODO: proper error handling
+		});
+
+		SmashTube.initContactEvents();
+	},
+
+	initContactEvents: function()
+	{
+		$("#smashtube-nav-contact").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+		{
+			$("body").append(SmashTube.CONTACT_TEMPLATE);
+
+			$("#smashtube-contact").modal("show");
+
+
+			$("#smashtube-contact").off("shown.bs.modal").on("shown.bs.modal", function()
+			{
+				$("#smashtube-contact-submit").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+				{
+					SmashTube.Splash.show();
+
+					$.ajax({
+						type: 'POST',
+						url: SmashTube.Url.createUrl("/contact"),
+						data: $("#contactform").serialize();
+					}).done(function (data, textStatus, jqXHR)
+					{
+						$("#smashtube-contact").modal("hide");
+
+						SmashTube.Splash.hide();
+
+					}).fail(function( jqXHR, textStatus, errorThrown )
+					{
+						ce("ERROR");
+						SmashTube.Splash.hide();
+						//TODO: proper error handling
+					});
+				});
+			});
+
+			$("#smashtube-contact").off("hidden.bs.modal").on("hidden.bs.modal", function()
+			{
+				$("#smashtube-contact").remove();
+			});
+
+		});
+	},
+
 	initSearchEvents: function()
 	{
 		$("#smashtube-nav-search").off("keyup").on("keyup", function(event)
 		{
 			var key = String.fromCharCode(event.keyCode);
 
-			if (/[a-zA-Z0-9-_ ]/.test(key))
+			if (/[a-zA-Z0-9-_ ]/.test(key) && $("#smashtube-nav-search").val() != "")
 			{
 				if (SmashTube.SEARCH_XHR)
 					SmashTube.SEARCH_XHR.abort();
@@ -365,7 +424,8 @@ SmashTube =
 					cl(data);
 				}).fail(function( jqXHR, textStatus, errorThrown )
 				{
-					cw("ERROR! BETTER CHECK YOSELF!");
+					if (textStatus != "abort")
+						ce("ERROR! BETTER CHECK YOSELF!");
 				});	
 			}
 		});
@@ -389,7 +449,10 @@ SmashTube =
 		$(document).off("keydown.toggledemomode").on("keydown.toggledemomode", function(event)
 		{
 			if (event.originalEvent.shiftKey && event.originalEvent.ctrlKey && event.keyCode == 220)
+			{
 				$("#smashtube-demo-button").toggle();
+				SmashTube.Notify.info("Debugmodus")
+			}
 		});
 
 		$("#smashtube-demo-button").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
@@ -401,10 +464,38 @@ SmashTube =
 			{
 				$("body").append(data);
 
+				SmashTube.Splash.show();
+
 				$("#smashtube-webplayer").modal("show");
 
-				$('#smashtube-player-video').mediaelementplayer({
+				$("#smashtube-webplayer").off("shown.bs.modal").on("shown.bs.modal", function()
+				{
+					$('#smashtube-player-video').mediaelementplayer(
+					{
+						success: function(mediaElement, originalNode, instance)
+						{
+							SmashTube.CURRENT_MEDIAELEMENT = mediaElement;
+							SmashTube.Splash.hide();
 
+							$('#smashtube-player-video').bind('playing', function(e)
+							{ 
+								//Hat schauen angefangen; falls user angemeldet in history speichern
+							});
+
+							$('#smashtube-player-video').bind('pause', function(e)
+							{ 
+								//hat pausiert; falls user angemeldet zeitstempel speichern
+
+								cw("Video paused @ " +SmashTube.CURRENT_MEDIAELEMENT.currentTime + " s");
+							});
+
+							$('#smashtube-player-video').bind('ended', function(e)
+							{ 
+								//FIXME: triggert net
+								//Hat fertig; falls user angemeldet al
+							});
+						}
+					});
 				});
 
 				$("#smashtube-webplayer").off("hidden.bs.modal").on("hidden.bs.modal", function()
@@ -417,6 +508,13 @@ SmashTube =
 				cw("ERROR! BETTER CHECK YOSELF!");
 			});	
 		});
+	},
+
+	configNotify: function()
+	{
+		SmashTube.Notify.options.progressBar = true;
+		SmashTube.Notify.options.positionClass = "toast-bottom-right";
+
 	}
 }
 
@@ -453,6 +551,8 @@ SmashTube.Splash = {
 	},
 }
 
+SmashTube.Notify = toastr;
+
 function cw(text)
 {
 	console.warn(text);
@@ -475,4 +575,5 @@ function isDefined(object)
 
 $(document).ready(function(){
 	SmashTube.init();
+	SmashTube.configNotify();
 });

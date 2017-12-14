@@ -20,6 +20,14 @@
     <link type="text/css" rel="stylesheet" href="/vendor/bootstrap-select/bootstrap-select.min.css">
     <script type="text/javascript" src="/vendor/bootstrap-select/bootstrap-select.min.js"></script>
 
+    <link type="text/css" rel="stylesheet" href="/vendor/mediaelement/mediaelement.min.css">
+    <!-- <script type="text/javascript" src="/vendor/mediaelement/mediaelement.min.js"></script> -->
+    <script type="text/javascript" src="/vendor/mediaelement/mediaelement-and-player.min.js"></script>
+    <script type="text/javascript" src="/vendor/mediaelement/de.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="/vendor/toastr/toastr.min.css">
+    <script type="text/javascript" src="/vendor/toastr/toastr.min.js"></script>
+
     <link type="text/css" rel="stylesheet" href="/vendor/bootstrap-iso/bootstrap-iso.css">
 
     <link type="text/css" rel="stylesheet" href="/styles/smashtube.css">
@@ -34,7 +42,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand">
+                <a class="navbar-brand smashtube-nav-control" data-type="explore">
                     <span class="fa-stack">
                         <i class="fa fa-bomb fa-stack-2x"></i>
                         <strong class="fa-stack-1x brand-initials-s">S</strong>
@@ -88,6 +96,11 @@
                         </a>
                     </li>
                     {% endif %}
+                    <li>
+                        <a id="smashtube-nav-contact" class="smashtube-nav-control">
+                            <span class="fa fa-fw fa-envelope"></span>
+                        </a>
+                    </li>
                 </ul>
 
                 <form class="navbar-form navbar-right">
@@ -102,6 +115,9 @@
                 </form>
 
                 <ul class="nav navbar-nav navbar-right">
+                    <li id="smashtube-demo-button" style="display: none;">
+                        <a class="smashtube-nav-control" data-type="demo"><span class="fa fa-fw fa-code"></span> Debug</a>
+                    </li>
                     <li>
                         <a class="smashtube-nav-control" data-type="explore"><span class="fa fa-fw fa-globe"></span> Entdecken</a>
                     </li>

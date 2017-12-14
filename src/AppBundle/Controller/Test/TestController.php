@@ -31,4 +31,12 @@ class TestController extends Controller
 //        $connection->update("user",array("username" => "adrian","password" => "sfäöasfljaskpfääas"),array("userId" => 4));
         return new Response('', Response::HTTP_OK);;
     }
+
+    /**
+     * @Route("/debug/webplayer")
+     */
+    public function debugWebplayer()
+    {
+        return $this->render('debug/webplayer.html.twig');
+    }
 }

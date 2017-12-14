@@ -6,9 +6,13 @@ use Doctrine\DBAL\Connection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -57,7 +61,6 @@ class MediaController extends Controller
     }
 
     /**
-     * @Method({"GET"})
      * @Route("/media/add")
      */
     public function addMediaAction(Request $request,Connection $connection)
@@ -82,19 +85,22 @@ class MediaController extends Controller
             ->add('save', SubmitType::class, array('label' => 'Speichern'))
             ->getForm();
 
+        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid())
         {
             $data = $form->getData();
 
-            $id = $connection->insert("media_description",
+            $connection->insert("media_description",
                 [
                     'title' => $data["title"],
                     "description" => $data["description"]
                 ]);
 
+            $id = $connection->lastInsertId();
+
+            $this->_updateCategories($connection,$id,$data["genre"]);
             die($id);
-            //category here
-//            $this->_updateCategories($connection,$mediaId,$data["genre"]);
         }
 
         return $this->render('media/detail/get.html.twig', array(

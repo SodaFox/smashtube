@@ -34,11 +34,11 @@ class MediaController extends Controller
             select d.id,d.title, d.description,
             m.duration,m.thumbnail,m.path,m.title as episode_title, m.description as episode_description,
             m.season, m.episode_number, c.genre
-            from media m
-            join media_description d on d.id = m.description_id
-            join media_category mc on mc.description_id = d.id
-            join category c on mc.category_id = c.id
-            where d.id = ?
+            from media_description d
+            left outer join media m on d.id = m.description_id
+            left outer join media_category mc on mc.description_id = d.id
+            left outer join category c on mc.category_id = c.id
+            where d.id = ?;
         ",array($mediaId));
 
         return new JsonResponse($result);
