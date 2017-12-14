@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 13, 2017 at 07:35 AM
+-- Generation Time: Dec 14, 2017 at 10:11 AM
 -- Server version: 5.7.19
 -- PHP Version: 7.1.9
 
@@ -168,6 +168,22 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `question_id` (`question_id`),
   KEY `design_id` (`design_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_contact`
+--
+
+DROP TABLE IF EXISTS `user_contact`;
+CREATE TABLE IF NOT EXISTS `user_contact` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(256) NOT NULL DEFAULT '0',
+  `last_name` varchar(256) NOT NULL DEFAULT '0',
+  `e_mail` varchar(256) NOT NULL DEFAULT '0',
+  `request` longtext NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
