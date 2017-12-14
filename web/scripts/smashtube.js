@@ -55,7 +55,10 @@ SmashTube =
 		$.ajax(
 		{
 			type: 'GET',
-			url: SmashTube.Url.createUrl("/user/security/login")
+			url: SmashTube.Url.createUrl("/user/security/login"),
+			beforeSend: function(jqXHR, settings) {
+				jqXHR.url = settings.url;
+			},
 		}).done(function (data, textStatus, jqXHR)
 		{
 			SmashTube.LOGIN_POPOVER_TEMPLATE = $(data).find("#loginform");
@@ -80,7 +83,7 @@ SmashTube =
 		})
 		.fail(function( jqXHR, textStatus, errorThrown )
 		{
-			ce(errorThrown);
+			SmashTube.Notify.warning("Ein Fehler beim Laden der Seite ist aufgetreten! <br/>" + jqXHR.url);
 		});
 	},
 
@@ -124,7 +127,10 @@ SmashTube =
 		{
 			type: "POST",
 			data: $("#loginform").serialize(),
-			url: SmashTube.Url.createUrl("/user/security/login")
+			url: SmashTube.Url.createUrl("/user/security/login"),
+			beforeSend: function(jqXHR, settings) {
+				jqXHR.url = settings.url;
+			},
 		}).done(function (data, textStatus, jqXHR)
 		{
 			if ($(data).find("[data-has-error]").attr("data-has-error") == "1")
@@ -172,14 +178,17 @@ SmashTube =
 	{
 		$.ajax({
 			type: 'GET',
-			url: SmashTube.Url.createUrl("/user/security/register")
+			url: SmashTube.Url.createUrl("/user/security/register"),
+			beforeSend: function(jqXHR, settings) {
+				jqXHR.url = settings.url;
+			},
 		}).done(function (data, textStatus, jqXHR)
 		{
 			SmashTube.REGISTER_TEMPLATE = data;
 
 		}).fail(function( jqXHR, textStatus, errorThrown )
 		{
-			//TODO: proper error handling
+			SmashTube.Notify.warning("Ein Fehler beim Laden der Seite ist aufgetreten! <br/>" + jqXHR.url);
 		}); 
 
 		SmashTube.initRegisterEvent();
@@ -262,13 +271,16 @@ SmashTube =
 		$.ajax({
 			type: 'GET',
 			url: SmashTube.Url.createUrl("/user/security/reset"),
+			beforeSend: function(jqXHR, settings) {
+				jqXHR.url = settings.url;
+			},
 		}).done(function (data, textStatus, jqXHR)
 		{
 			SmashTube.FORGOT_PASSWORD_TEMPLATE = data;
 
 		}).fail(function( jqXHR, textStatus, errorThrown )
 		{
-			//TODO: proper error handling
+			SmashTube.Notify.warning("Ein Fehler beim Laden der Seite ist aufgetreten! <br/>" + jqXHR.url);
 		});
 
 		SmashTube.initForgotPasswordEvent();
@@ -348,13 +360,16 @@ SmashTube =
 		$.ajax({
 			type: 'GET',
 			url: SmashTube.Url.createUrl("/contact"),
+			beforeSend: function(jqXHR, settings) {
+				jqXHR.url = settings.url;
+			},
 		}).done(function (data, textStatus, jqXHR)
 		{
 			SmashTube.CONTACT_TEMPLATE = data;
 
 		}).fail(function( jqXHR, textStatus, errorThrown )
 		{
-			//TODO: proper error handling
+			SmashTube.Notify.warning("Ein Fehler beim Laden der Seite ist aufgetreten! <br/>" + jqXHR.url);
 		});
 
 		SmashTube.initContactEvents();
@@ -448,7 +463,7 @@ SmashTube =
 	{
 		$(document).off("keydown.toggledemomode").on("keydown.toggledemomode", function(event)
 		{
-			if (event.originalEvent.shiftKey && event.originalEvent.ctrlKey && event.keyCode == 220)
+			if ((event.originalEvent.shiftKey && event.originalEvent.ctrlKey) && (event.keyCode == 220 ||event.keyCode == 160))
 			{
 				$("#smashtube-demo-button").toggle();
 				$("#smashtube-nav-contact").parent().toggle();
@@ -553,6 +568,38 @@ SmashTube.Splash = {
 }
 
 SmashTube.Notify = toastr;
+
+$.fn.originalModal = $.fn.modal;
+
+/*$.fn.modal = function(b,d)
+{
+	if (b == "show")
+	{
+		cw("show")
+		$(this).css("opacity", "0");
+		$(this).originalModal(b,d);
+
+		SmashTube.CURRENT_DIALOG = $(this)
+		setTimeout(function()
+		{
+			SmashTube.CURRENT_DIALOG.css("transition", "opacity 1.5s ease");
+			SmashTube.CURRENT_DIALOG.css("opacity", "1");
+		}, 1000)
+	}
+	else if (b == "hide")
+	{
+		cw("hide")
+		SmashTube.CURRENT_DIALOG.css("opacity", "0");
+		setTimeout(function()
+		{
+			$(this).originalModal(b,d);
+		}, 1000);
+	}
+	else
+	{
+		$(this).originalModal(b,d);
+	}
+}*/
 
 function cw(text)
 {
