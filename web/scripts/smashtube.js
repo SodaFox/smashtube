@@ -378,7 +378,7 @@ SmashTube =
 					$.ajax({
 						type: 'POST',
 						url: SmashTube.Url.createUrl("/contact"),
-						data: $("#contactform").serialize();
+						data: $("#contactform").serialize()
 					}).done(function (data, textStatus, jqXHR)
 					{
 						$("#smashtube-contact").modal("hide");
