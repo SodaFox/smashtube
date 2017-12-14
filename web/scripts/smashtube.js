@@ -22,6 +22,8 @@ SmashTube =
 	FORGOT_PASSWORD_TEMPLATE: undefined,
 	SEARCH_XHR: undefined,
 
+	__DEBUG_MODE__: true,
+
 	init: function()
 	{
 		this.initLogin();
@@ -30,6 +32,8 @@ SmashTube =
 		this.initForgotPassword();
 		this.initSearchEvents();
 
+		if (this.__DEBUG_MODE__)
+			this.__initDebugEvents__();
 	},
 
 	toggleView: function(type)
@@ -76,6 +80,8 @@ SmashTube =
 
 			$("#smashtube-nav-sign-in").off("shown.bs.popover").on("shown.bs.popover", function()
 			{
+				$("[name='_username']").focus();
+
 				SmashTube.bindCheckLoginFormEvent();
 				SmashTube.initForgotPasswordEvent();
 				SmashTube.initRegisterEvent();
@@ -228,10 +234,11 @@ SmashTube =
 							data: registerformData
 						}).done(function (data, textStatus, jqXHR)
 						{
-							SmashTube.Splash.hide()
-							alert("Server hat bekommen")
+							SmashTube.Splash.hide();
 
 							$("#smashtube-register").modal("hide");
+
+
 						}).fail(function( jqXHR, textStatus, errorThrown )
 						{
 							SmashTube.Splash.hide()
@@ -273,7 +280,7 @@ SmashTube =
 		{
 			$("body").append(SmashTube.FORGOT_PASSWORD_TEMPLATE);
 
-			$("#smashtube-reset-securequestion-select").selectpicker();
+			$("#form_question").selectpicker();
 
 			$("#smashtube-reset").modal("show");
 
@@ -375,6 +382,41 @@ SmashTube =
 		}
 
 		return retVal;
+	},
+
+	__initDebugEvents__: function()
+	{
+		$(document).off("keydown.toggledemomode").on("keydown.toggledemomode", function(event)
+		{
+			if (event.originalEvent.shiftKey && event.originalEvent.ctrlKey && event.keyCode == 220)
+				$("#smashtube-demo-button").toggle();
+		});
+
+		$("#smashtube-demo-button").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+		{
+			$.ajax({
+				type: 'GET',
+				url: SmashTube.Url.createUrl("/debug/webplayer"),
+			}).done(function (data, textStatus, jqXHR)
+			{
+				$("body").append(data);
+
+				$("#smashtube-webplayer").modal("show");
+
+				$('#smashtube-player-video').mediaelementplayer({
+
+				});
+
+				$("#smashtube-webplayer").off("hidden.bs.modal").on("hidden.bs.modal", function()
+				{
+					$(this).remove();	
+				});
+
+			}).fail(function( jqXHR, textStatus, errorThrown )
+			{
+				cw("ERROR! BETTER CHECK YOSELF!");
+			});	
+		});
 	}
 }
 
