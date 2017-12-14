@@ -238,14 +238,14 @@ SmashTube =
 
 						}).fail(function( jqXHR, textStatus, errorThrown )
 						{
-							SmashTube.Notify.warning("Das Anmeldeformular ist fehlerhaft ausgefüllt!");
+							SmashTube.Notify.warning("Das Registrierungsformular ist fehlerhaft ausgefüllt!");
 							SmashTube.Splash.hide()
 							//TODO: proper error handling
 						});
 					}		
 					else
 					{
-						SmashTube.Notify.warning("Das Anmeldeformular ist fehlerhaft ausgefüllt!");
+						SmashTube.Notify.warning("Das Registrierungsformular ist fehlerhaft ausgefüllt!");
 					}
 				});	
 			});
@@ -326,7 +326,7 @@ SmashTube =
 								*/
 								$("#smashtube-reset").modal("hide");
 
-								alert("Ihr Passwort wurde erfolgreich zurückgesetzt.");
+								SmashTube.Notify.success("Ihr Passwort wurde erfolgreich zurückgesetzt.");
 
 							}).fail(function( jqXHR, textStatus, errorThrown )
 							{
@@ -387,7 +387,7 @@ SmashTube =
 
 					}).fail(function( jqXHR, textStatus, errorThrown )
 					{
-						ce("ERROR");
+						SmashTube.Notify.warning("Kontaktformular konnte nicht bearbeitet werden!");
 						SmashTube.Splash.hide();
 						//TODO: proper error handling
 					});
