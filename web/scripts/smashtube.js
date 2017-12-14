@@ -38,7 +38,7 @@ SmashTube =
 		this.initContact();
 
 		if (this.__DEBUG_MODE__)
-			this.__initDebugEvents__();
+			this.__initDebug__();
 	},
 
 	initExplore: function()
@@ -444,13 +444,14 @@ SmashTube =
 		return retVal;
 	},
 
-	__initDebugEvents__: function()
+	__initDebug__: function()
 	{
 		$(document).off("keydown.toggledemomode").on("keydown.toggledemomode", function(event)
 		{
 			if (event.originalEvent.shiftKey && event.originalEvent.ctrlKey && event.keyCode == 220)
 			{
 				$("#smashtube-demo-button").toggle();
+				$("#smashtube-nav-contact").parent().toggle();
 				SmashTube.Notify.info("Debugmodus")
 			}
 		});
