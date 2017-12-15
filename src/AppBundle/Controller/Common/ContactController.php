@@ -35,18 +35,28 @@ class ContactController extends Controller
      */
     public function postSendMail(Request $request,Connection $con)
     {   
-        return http_response_code(200);
-        foreach($_POST as $key => $value){
-            if(empty($value)){
-                return http_response_code(418);
+        if(isset($_POST['_first_name'])){
+            foreach($_POST as $key => $value){
+                if(empty($value)){
+                    return new JsonResponse("Formular nicht vollständig ausgefüllt", 418);
+                }
+            };
+            
+            $query = $con->insert("user_contact",array(
+                "first_name" => $_POST['_first_name'],
+                "last_name" => $_POST['_last_name'],
+                "e_mail" => $_POST['_email'],
+                "request" => $_POST['_smashtube-contact-input']
+            ));
+
+            if($query)
+            {
+                return new JsonResponse("Erfolgreich in Datenbank eingetragen", 200);
             }
-        };
-        $db_con = mysqli("localhost","root", "","SmashTube");
-        $query = $db_con->query("INSERT INTO user_contact(first_name, last_name, e_mail, request)
-                                 VALUES(\'".$_POST['_first_name']."\', \'".$_POST['_last_name']."\', \'".$_POST['_email']."\', \'".$_POST['_smashtube-contact-input'].")");
-        //if($query)
-        {
-            return http_response_code(200);
+            else
+            {
+                return new JsonResponse("Datensatz konnte nicht eingetragen werden", 418);
+            }
         }
     }
 }
