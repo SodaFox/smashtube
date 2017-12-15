@@ -466,7 +466,6 @@ SmashTube =
 			if ((event.originalEvent.shiftKey && event.originalEvent.ctrlKey) && (event.keyCode == 220 ||event.keyCode == 160))
 			{
 				$("#smashtube-demo-button").toggle();
-				$("#smashtube-nav-contact").parent().toggle();
 				SmashTube.Notify.info("Debugmodus")
 			}
 		});
