@@ -12,17 +12,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Tests\StringableObject;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class DefaultController extends Controller
 {
     /**
      * @Route("/")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, Connection $connection)
     {
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        $result = $connection->fetchAll("
+        SELECT title, thumbnail, description, path FROM media UNION SELECT title, description, thumbnail, path FROM media_description
+        ");
+
+        return new JsonResponse($result);
+        return $this->render('media/getAll.html.twig',array(
+            'medias' => $result
+        ));
+        //return $this->render('default/index.html.twig', [
+        //    'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        //]);
     }
 
 }
