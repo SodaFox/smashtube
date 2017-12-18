@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 14, 2017 at 10:11 AM
+-- Generation Time: Dec 18, 2017 at 07:55 AM
 -- Server version: 5.7.19
 -- PHP Version: 7.1.9
 
@@ -113,6 +113,8 @@ CREATE TABLE IF NOT EXISTS `media_description` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(256) NOT NULL,
   `description` varchar(256) NOT NULL,
+  `thumbnail` varchar(256) DEFAULT NULL,
+  `path` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
@@ -144,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `timestamp` (
   PRIMARY KEY (`id`),
   KEY `FK_timestamp_media` (`media_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -167,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`),
   KEY `question_id` (`question_id`),
   KEY `design_id` (`design_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
