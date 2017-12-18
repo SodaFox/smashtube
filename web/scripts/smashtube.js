@@ -3,8 +3,6 @@
 //Date: 2017-11-23
 //Descr.: This is the main js-File for smashtube
 //-------------------------------------------------
-
-
 SmashTube =
 {
 	/*GLOBALS:*/
@@ -457,8 +455,10 @@ SmashTube =
 
 	initDefaultThumbnail: function()
 	{
-		$(".smashtube-media-thumbnail").on("error", function(){
-			$(this).attr('src', 'demo/thumbnail-demo.jpg');
+		$(".smashtube-media-thumbnail").on("error", function()
+		{
+			var randomThumbnailIndex = Math.round((Math.random() * 10)) % 6
+			$(this).attr('src', 'demo/thumbnail-demo-' + randomThumbnailIndex + '.jpg');
 		});
 	},
 
