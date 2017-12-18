@@ -26,8 +26,7 @@ class DefaultController extends Controller
         SELECT title, thumbnail, description, path FROM media UNION SELECT title, description, thumbnail, path FROM media_description
         ");
 
-        return new JsonResponse($result);
-        return $this->render('media/getAll.html.twig',array(
+        return $this->render('default/index.html.twig',array(
             'medias' => $result
         ));
         //return $this->render('default/index.html.twig', [

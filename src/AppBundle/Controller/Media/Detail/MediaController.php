@@ -130,11 +130,13 @@ class MediaController extends Controller
 
             $file->move($dir,$filename);
 
+            $filepath = $dir . "\/" . $filename;
+
             $connection->insert("media",array(
                 "episode_number" => $data["episode_number"],
                 "duration" => $data["duration"],
                 "title" => $data["title"],
-                "path" => $data["file"],
+                "path" => $filepath,
                 "season" => $data["season"],
                 "description_id" => $mediaId,
                 "description" => $data["description"]

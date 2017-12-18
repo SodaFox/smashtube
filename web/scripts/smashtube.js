@@ -3,14 +3,7 @@
 //Date: 2017-11-23
 //Descr.: This is the main js-File for smashtube
 //-------------------------------------------------
-//Changes:
-//-------------------------------------------------
-//	- 2017-11-23
-//		- MOR: Created file
-//		- MOR: Added main namespace
-//		- MOR: Added output helper functions
-//		- MOR: 
-//-------------------------------------------------
+
 
 SmashTube =
 {
@@ -36,6 +29,9 @@ SmashTube =
 		this.initForgotPassword();
 		this.initSearchEvents();
 		this.initContact();
+		this.initMediaContentEvents();
+
+		this.initDefaultThumbnail();
 
 		if (this.__DEBUG_MODE__)
 			this.__initDebug__();
@@ -459,6 +455,84 @@ SmashTube =
 		return retVal;
 	},
 
+	initDefaultThumbnail: function()
+	{
+		$(".smashtube-media-thumbnail").on("error", function(){
+			$(this).attr('src', 'demo/thumbnail-demo.jpg');
+		});
+	},
+
+	initMediaContentEvents: function()
+	{
+		$(".smashtube-content-container").off(SmashTube.CLICK).on(SmashTube.CLICK, function()
+		{
+			SmashTube.Splash.show();
+
+			var currentSrc = $(this).attr("data-src");
+			var currentTitle = $(this).attr("data-title");
+
+			$.ajax({
+				type: 'GET',
+				url: SmashTube.Url.createUrl("/debug/webplayer"),
+				async: false
+			}).done(function (data, textStatus, jqXHR)
+			{
+				data = data.replace("%%TITLE%%", currentTitle);
+				data = data.replace("%%SOURCE%%", currentSrc);
+
+				$("body").append(data);
+
+				$("#smashtube-webplayer").modal("show");
+
+				$("#smashtube-webplayer").off("shown.bs.modal").on("shown.bs.modal", function()
+				{
+					$('#smashtube-player-video').mediaelementplayer(
+					{
+						success: function(mediaElement, originalNode, instance)
+						{
+							$('#smashtube-player-video').show();
+							SmashTube.CURRENT_MEDIAELEMENT = mediaElement;
+							SmashTube.Splash.hide();
+
+							$('#smashtube-player-video').bind('playing', function(e)
+							{ 
+								//Hat schauen angefangen; falls user angemeldet in history speichern
+							});
+
+							$('#smashtube-player-video').bind('pause', function(e)
+							{ 
+								//hat pausiert; falls user angemeldet zeitstempel speichern
+
+								cw("Video paused @ " +SmashTube.CURRENT_MEDIAELEMENT.currentTime + " s");
+							});
+
+							$('#smashtube-player-video').bind('ended', function(e)
+							{ 
+								//FIXME: triggert net
+								//Hat fertig; falls user angemeldet al
+							});
+						},
+
+						fail: function()
+						{
+							SmashTube.Splash.hide();
+							SmashTube.Notify.show("Die Wiedergabe konnte aufgrund eines Fehlers nicht gestartet werden");
+						}
+					});
+				});
+
+				$("#smashtube-webplayer").off("hidden.bs.modal").on("hidden.bs.modal", function()
+				{
+					$(this).remove();	
+				});
+
+			}).fail(function( jqXHR, textStatus, errorThrown )
+			{
+				cw("ERROR! BETTER CHECK YOSELF!");
+			});	
+		});
+	},
+
 	__initDebug__: function()
 	{
 		$(document).off("keydown.toggledemomode").on("keydown.toggledemomode", function(event)
@@ -567,38 +641,6 @@ SmashTube.Splash = {
 }
 
 SmashTube.Notify = toastr;
-
-$.fn.originalModal = $.fn.modal;
-
-/*$.fn.modal = function(b,d)
-{
-	if (b == "show")
-	{
-		cw("show")
-		$(this).css("opacity", "0");
-		$(this).originalModal(b,d);
-
-		SmashTube.CURRENT_DIALOG = $(this)
-		setTimeout(function()
-		{
-			SmashTube.CURRENT_DIALOG.css("transition", "opacity 1.5s ease");
-			SmashTube.CURRENT_DIALOG.css("opacity", "1");
-		}, 1000)
-	}
-	else if (b == "hide")
-	{
-		cw("hide")
-		SmashTube.CURRENT_DIALOG.css("opacity", "0");
-		setTimeout(function()
-		{
-			$(this).originalModal(b,d);
-		}, 1000);
-	}
-	else
-	{
-		$(this).originalModal(b,d);
-	}
-}*/
 
 function cw(text)
 {
